@@ -1,0 +1,28 @@
+services:
+  db:
+    image: mysql:8
+    volumes:
+      - my_database:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+  
+  backend:
+    build: .
+    ports:
+      - "5001:5000"
+    environment:
+      DB_HOST: db
+      DB_USER: admin
+      DB_PASSWORD: admin123
+    depends_on:
+      - db
+
+volumes:
+  my_database:
+   
